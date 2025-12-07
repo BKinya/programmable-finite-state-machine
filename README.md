@@ -10,4 +10,6 @@ A deterministic finite state automata which accepts all strings of 0's and 1's w
 
   <img src ="https://github.com/BKinya/programmable-finite-state-machine/blob/main/img/state_machine_diagram.png"/>
 
+  #KotlinDsl
+
   
