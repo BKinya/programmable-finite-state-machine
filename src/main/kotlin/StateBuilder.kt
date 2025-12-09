@@ -1,11 +1,13 @@
 package org.example
 
 class StateBuilder {
-    val transitions = mutableMapOf<InputSymbol, StateName>()
+    val transitions = mutableMapOf<InputSymbol, Transition>()
 
-    fun transition(input: String, to: String){
+    fun transition(input: String, to: String, output: String) {
         val inputSymbol = InputSymbol(input)
         val nextStateName = StateName(to)
-        transitions[inputSymbol] = nextStateName
+        val outputSymbol = OutputSymbol(output)
+        val transition = Transition(nextStateName, outputSymbol)
+        transitions[inputSymbol] = transition
     }
 }

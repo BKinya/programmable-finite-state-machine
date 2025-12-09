@@ -18,25 +18,26 @@ class FsmEngine(
      * @param input symbol e.g. "0" or "1"
      * @return true if transition happened, false otherwise
      */
-    fun processInput(input: String): Boolean {
+    fun processInput(input: String): OutputSymbol? {
         val inputSymbol = InputSymbol(input)
 
-        val nextStateName = currentState.transitionTable.entries[inputSymbol]
-        return if (nextStateName != null) {
-            println("Transitioned from ${currentStateName.value} on input $input to ${nextStateName.value}")
-            currentStateName = nextStateName
-            true
+        val transition = currentState.transitionTable.entries[inputSymbol]
+        return if (transition != null) {
+            println("Transitioned from ${currentStateName.value} on input $input to ${transition.stateName.value}")
+            currentStateName = transition.stateName
+            transition.outputSymbol
         } else {
             println("No transition from ${currentStateName.value} for input $input No state changes")
-            false
+            null
         }
     }
 
-    fun  processSequenceInput(inputSequence: String): StateName{
+    fun  processSequenceInput(inputSequence: String): String{
+        var result = ""
         for(char in inputSequence){
-            processInput(char.toString())
+           result+= processInput(char.toString())?.value
         }
-        return currentStateName
+        return result
     }
 
     fun isFinished() = currentState.isFinal

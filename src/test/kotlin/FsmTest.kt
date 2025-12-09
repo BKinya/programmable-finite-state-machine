@@ -16,20 +16,20 @@ class FsmTest {
         fsm = defineFSM("TestFSm") {
             initialState("Qempty")
             state("Qempty", isFinal = true) {
-                transition("0", "Qone")
-                transition("1", "Qtwo")
+                transition("0", "Qone", "1")
+                transition("1", "Qtwo", "0")
             }
             state("Qone", isFinal = true) {
-                transition("0", "Qdead")
-                transition("1", "Qtwo")
+                transition("0", "Qdead", "1")
+                transition("1", "Qtwo", "0")
             }
             state("Qtwo", isFinal = true) {
-                transition("0", "Qone")
-                transition("1", "Qdead")
+                transition("0", "Qone", "1")
+                transition("1", "Qdead", "0")
             }
             state("Qdead", isFinal = false) {
-                transition("0", "Qdead")
-                transition("1", "Qdead")
+                transition("0", "Qdead", "1")
+                transition("1", "Qdead", "0")
             }
         }
     }
@@ -39,6 +39,7 @@ class FsmTest {
     fun `given a valid input should map to correct state`(
         input: String,
         expectedCurrentStateName: String,
+        expectedResult: String
     ) {
         val fsmEngine = FsmEngine(fsm)
         val result = fsmEngine.processSequenceInput(input)
@@ -46,18 +47,19 @@ class FsmTest {
             expectedCurrentStateName, fsmEngine.currentStateName.value,
             "Sequence $input should end in $expectedCurrentStateName "
         )
+        assertEquals(expectedResult, result, "input  $input should produce output $expectedResult")
     }
 
 
     companion object {
         @JvmStatic
         fun fsmInputOutput() = Stream.of(
-            Arguments.of("0", "Qone"),
-            Arguments.of("1", "Qtwo"),
-            Arguments.of("01", "Qtwo"),
-            Arguments.of("10", "Qone"),
-            Arguments.of("00", "Qdead"),
-            Arguments.of("11", "Qdead")
+            Arguments.of("0", "Qone", "1"),
+            Arguments.of("1", "Qtwo", "0"),
+            Arguments.of("01", "Qtwo", "10"),
+            Arguments.of("10", "Qone", "01"),
+            Arguments.of("00", "Qdead", "11"),
+            Arguments.of("11", "Qdead", "00")
         )
     }
 }

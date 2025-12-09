@@ -12,10 +12,17 @@ data class State(
     val isFinal: Boolean
 )
 
+data class Transition(
+    val stateName: StateName,
+    val outputSymbol: OutputSymbol
+)
+
 data class TransitionTable(
-    val entries: Map<InputSymbol, StateName>
+    val entries: Map<InputSymbol, Transition>
 )
 
 @JvmInline value class StateName(val value: String)
 
 @JvmInline value class InputSymbol(val value: String)
+
+@JvmInline value class OutputSymbol(val value: String)
